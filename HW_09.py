@@ -76,18 +76,16 @@ def main():
         if command in ["hello", "hi"]:
             print(hello_func())
         elif command.startswith("add "):
-            command_list = command.split(' ')
             if len(command.split(' ')) != 3:
                 print(input_error_raiser())
             else:
                 _, name, phone = command.split(' ')
                 print(add_func(users_dict, name, phone))
         elif command.startswith("change "):
-            command_list = command.split(' ')
-            if len(command_list) != 3:
+            if len(command.split(' ')) != 3:
                 print(input_error_raiser())
             else:
-                _, name, phone = command_list
+                _, name, phone = command.split(' ')
                 print(change_func(users_dict, name, phone))
         elif command.startswith("phone "):
             if len(command.split(' ')) != 2:
