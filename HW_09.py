@@ -27,8 +27,7 @@ def add_func(users_dict, name, phone):
     if name and phone:
         users_dict[name] = phone
         return f"Contact {name.capitalize()}: phone {phone}"
-    else:
-        raise ValueError
+    raise ValueError
 
 
 @input_error
@@ -37,11 +36,9 @@ def change_func(users_dict, name, phone):
     if name and phone:
         if name not in users_dict:
             raise KeyError
-        else:
-            users_dict[name] = phone
-            return f"Phone number for {name.capitalize()} changed to {phone}"
-    else:
-        raise ValueError
+        users_dict[name] = phone
+        return f"Phone number for {name.capitalize()} changed to {phone}"
+    raise ValueError
 
 
 
@@ -50,8 +47,7 @@ def show_phone(users_dict, name):
     """Show a current contact's phone number"""
     if name not in users_dict:
         raise KeyError
-    else:
-        return f"The phone number for {name.capitalize()} is {users_dict[name]}"
+    return f"The phone number for {name.capitalize()} is {users_dict[name]}"
 
 
 
@@ -59,9 +55,8 @@ def show_all(users_dict):
     """Show all contacts if it possible"""
     if not users_dict:
         return "No users available"
-    else:
-        result = "\n".join([f"{name.capitalize()}: {phone}" for name, phone in users_dict.items()])
-        return result
+    result = "\n".join([f"{name.capitalize()}: {phone}" for name, phone in users_dict.items()])
+    return result
 
 
 @input_error
@@ -73,17 +68,13 @@ def input_error_raiser():
 def main():
     """Main function"""
     users_dict = {}
-
     while True:
         command = input("Enter command: ").lower()
-
         if command in ["good bye", "close", "exit", "stop", "."]:
             print("Good bye!")
             break
-
         if command in ["hello", "hi"]:
             print(hello_func())
-
         elif command.startswith("add "):
             command_list = command.split(' ')
             if len(command.split(' ')) != 3:
@@ -91,7 +82,6 @@ def main():
             else:
                 _, name, phone = command.split(' ')
                 print(add_func(users_dict, name, phone))
-
         elif command.startswith("change "):
             command_list = command.split(' ')
             if len(command_list) != 3:
@@ -99,14 +89,12 @@ def main():
             else:
                 _, name, phone = command_list
                 print(change_func(users_dict, name, phone))
-
         elif command.startswith("phone "):
             if len(command.split(' ')) != 2:
                 print(input_error_raiser())
             else:
                 _, name = command.split(' ')
                 print(show_phone(users_dict, name))
-
         elif command == "show all":
             print(show_all(users_dict))
         else:
