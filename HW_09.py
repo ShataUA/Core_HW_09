@@ -7,11 +7,11 @@ def input_error(func):
         try:
             return func(*args, **kwargs)
         except KeyError:
-            return "Unknown user or invalid user name"
+            return "Invalid user name or user name not found"
         except ValueError:
             return "Give me name and phone please"
         except IndexError:
-            return "Invalid command or input"
+            return "User name is already exists"
     return inner
 
 
@@ -22,33 +22,32 @@ def hello_func():
 
 
 @input_error
-def add_func(users_dict, name, phone):
+def add_func(users_dict, command):
     """Add a new contact"""
-    if name and phone:
+    _, name, phone = command.split()
+    if name and phone and name not in users_dict:
         users_dict[name] = phone
         return f"Contact {name.capitalize()}: phone {phone}"
-    raise ValueError
+    raise IndexError if users_dict[name] else ValueError
 
 
 @input_error
-def change_func(users_dict, name, phone):
+def change_func(users_dict, command):
     """Change a current contact"""
-    if name and phone:
-        if name not in users_dict:
-            raise KeyError
+    _, name, phone = command.split()
+    if name and phone and name in users_dict:
         users_dict[name] = phone
         return f"Phone number for {name.capitalize()} changed to {phone}"
-    raise ValueError
-
+    raise ValueError if users_dict[name] else KeyError
 
 
 @input_error
-def show_phone(users_dict, name):
+def show_phone(users_dict, command):
     """Show a current contact's phone number"""
+    _, name = command.split()
     if name not in users_dict:
         raise KeyError
     return f"The phone number for {name.capitalize()} is {users_dict[name]}"
-
 
 
 def show_all(users_dict):
@@ -59,40 +58,23 @@ def show_all(users_dict):
     return result
 
 
-@input_error
-def input_error_raiser():
-    """Returns input error"""
-    raise IndexError
-
 
 def main():
     """Main function"""
     users_dict = {}
     while True:
-        command = input("Enter command: ").lower()
+        command = input("Enter command: ").lower().strip()
         if command in ["good bye", "close", "exit", "stop", "."]:
             print("Good bye!")
             break
         if command in ["hello", "hi"]:
             print(hello_func())
         elif command.startswith("add "):
-            if len(command.split(' ')) != 3:
-                print(input_error_raiser())
-            else:
-                _, name, phone = command.split(' ')
-                print(add_func(users_dict, name, phone))
+            print(add_func(users_dict, command))
         elif command.startswith("change "):
-            if len(command.split(' ')) != 3:
-                print(input_error_raiser())
-            else:
-                _, name, phone = command.split(' ')
-                print(change_func(users_dict, name, phone))
+            print(change_func(users_dict, command))
         elif command.startswith("phone "):
-            if len(command.split(' ')) != 2:
-                print(input_error_raiser())
-            else:
-                _, name = command.split(' ')
-                print(show_phone(users_dict, name))
+            print(show_phone(users_dict, command))
         elif command == "show all":
             print(show_all(users_dict))
         else:
